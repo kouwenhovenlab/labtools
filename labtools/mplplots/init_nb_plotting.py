@@ -6,3 +6,4 @@ rcParams['savefig.dpi'] = 150
 rcParams['savefig.transparent'] = False
 rcParams['font.family'] = 'Arial'
 rcParams['font.size'] = 8
+rcParams['lines.markersize'] = 4
