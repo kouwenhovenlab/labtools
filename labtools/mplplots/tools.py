@@ -1,7 +1,51 @@
+import time
 import numpy as np
 from matplotlib import pyplot as plt
 from matplotlib import gridspec, cm
 from matplotlib.colors import rgb2hex
+
+from qtpy.QtWidgets import QApplication
+from qtpy.QtGui import QPixmap
+
+
+# UI and figure handling tools
+def copy(fig=None):
+    if fig is None:
+        canvas = plt.gcf().canvas
+    else:
+        canvas = fig.canvas
+
+    canvas.draw()
+    try:
+        pixmap = QPixmap.grabWidget(canvas)
+    except: # PyQt5+
+        pixmap = canvas.grab()
+    QApplication.clipboard().setPixmap(pixmap)
+    print("Image copied to clipboard.")
+
+
+def update_and_copy(fig=None, tight=True):
+    if fig is None:
+        fig = plt.gcf()
+    if tight:
+        fig.tight_layout()
+    copy(fig)
+
+
+def process_events(fig=None, activate_window=True):
+    if fig is not None:
+        fig.canvas.draw()
+        if activate_window:
+            fig.canvas.manager.window.activateWindow()
+            fig.canvas.manager.window.raise_()
+    QApplication.processEvents()
+
+
+def wait_and_update(t, sleeptime=0.05, fig=None):
+    t0 = time.time()
+    while time.time() < t0 + t:
+        time.sleep(sleeptime)
+        process_events(fig)
 
 
 # color management tools
